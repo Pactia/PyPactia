@@ -6,7 +6,6 @@ Para la instalación se debe correr el siguiente comando en python:
 ```python
 pip install git+https://github.com/Pactia/PyPactia
 ```
-#Ayudantes disponibles
 
 ## CRM
 **crm_tables():** Esta función lista las tablas del CRM disponibles para utilizar. Esta permite identificar los nombres para poder ser utilizadas en las dos funciones posteriores dónde la tabla es un parametro. 
