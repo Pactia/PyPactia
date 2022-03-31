@@ -7,12 +7,13 @@ import getpass
 class crm_ayudantes:
 
     def inicio_crm():
+
         user = input('Usuario:')
         key = getpass.getpass('Contraseña')
         return user, key
 
-    def crm_tables():
-        global user, key
+    def crm_tables(user=user, key=key):
+
         api_url = "https://pactia.od2.vtiger.com/restapi/V1/OData/Pull/odata.svc/Entity"
         response = requests.get(api_url, auth=(user, key))
         if response.status_code==200:
@@ -26,12 +27,11 @@ class crm_ayudantes:
         print('Las tablas disponibles en el CRM son:\n\n')
         print(pd.json_normalize(pd.json_normalize(final_json).collection[0])['atom:title'])
     
-    def read_crm(table, page):
+    def read_crm(table, page, user=user, key=key):
     #Parametro tabla: Tabla de la cuál se va a extraer la información
     #Parametro page: Página de registros, cada página tiene 5000 registros
     
     #Llamado de información por API
-        global user, key
         if page < 0:
             print('Debe especificar una página')
         elif page == 1:
@@ -74,8 +74,8 @@ class crm_ayudantes:
         
         return data
 
-    def complete_crm(table):
-        global user, key
+    def complete_crm(table, user=user, key=key):
+
     #Se ingresa la tabla qué se quiere leer completamente, es el único parametro y debe ser en formato string
     
     #Se inicializan valores para entrar a ciclo
