@@ -8,6 +8,15 @@ pip install git+https://github.com/Pactia/PyPactia
 ```
 
 ## CRM
+
+Para poder traer información del CRM es necesario ingresar usuario y contraseña, para eso es necesario utilizar la función **inicio_crm()** cómo se muestra a continuación, la función le pedirá que ingrese las credenciales de acceso:
+
+```python
+from ayudantes.crm import crm_ayudantes
+
+user, key = crm_ayudantes.inicio_crm()
+```
+
 **crm_tables():** Esta función lista las tablas del CRM disponibles para utilizar. Esta permite identificar los nombres para poder ser utilizadas en las dos funciones posteriores dónde la tabla es un parametro. 
 
 ```python
