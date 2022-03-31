@@ -8,7 +8,7 @@ class crm_ayudantes:
 
     def inicio_crm():
 
-        user = getpass.getuser('Usuario:')
+        user = input('Usuario:')
         key = getpass.getpass('Contraseña:')
         return user, key
       
