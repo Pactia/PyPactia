@@ -3,9 +3,9 @@ import xmltodict
 import json
 import pandas as pd
 
-class odata_helpers:
+class crm_ayudantes:
 
-    def odata_tables():
+    def crm_tables():
         api_url = "https://pactia.od2.vtiger.com/restapi/V1/OData/Pull/odata.svc/Entity"
         response = requests.get(api_url, auth=('CRM-ServicioalCliente@pactia.com', 'TriFBfAepE0YRxxM'))
         if response.status_code==200:
@@ -19,7 +19,7 @@ class odata_helpers:
         print('Las tablas disponibles en el CRM son:\n\n')
         print(pd.json_normalize(pd.json_normalize(final_json).collection[0])['atom:title'])
     
-    def read_odata(table, page):
+    def read_crm(table, page):
     #Parametro tabla: Tabla de la cuál se va a extraer la información
     #Parametro page: Página de registros, cada página tiene 5000 registros
     
@@ -66,7 +66,7 @@ class odata_helpers:
         
         return data
 
-    def complete_Odata(table):
+    def complete_crm(table):
     #Se ingresa la tabla qué se quiere leer completamente, es el único parametro y debe ser en formato string
     
     #Se inicializan valores para entrar a ciclo
@@ -74,9 +74,9 @@ class odata_helpers:
         shape = 0
         count = 0
         #Cada llamado entrega máximo 5001 registros sí tiene hojas adicionales
-        while shape%5001 == 0:
+        while shape%5001 == 0 or shape%5000 == 0:
             count+=1
-            page_table = read_odata(table, count)
+            page_table = read_crm(table, count)
             df = df.append(page_table)
             shape = len(df)
             
