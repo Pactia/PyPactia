@@ -2,12 +2,18 @@ import requests
 import xmltodict
 import json
 import pandas as pd
+import getpass
 
 class crm_ayudantes:
 
+    def inicio_crm():
+        user = input('Usuario:')
+        key = getpass.getpass('Contraseña')
+        return user, key
+
     def crm_tables():
         api_url = "https://pactia.od2.vtiger.com/restapi/V1/OData/Pull/odata.svc/Entity"
-        response = requests.get(api_url, auth=('CRM-ServicioalCliente@pactia.com', 'TriFBfAepE0YRxxM'))
+        response = requests.get(api_url, auth=(user, key))
         if response.status_code==200:
             print('Conexión exitosa a OData')
         else:
@@ -30,7 +36,7 @@ class crm_ayudantes:
             skip=(page-1)*5000
             api_url = "https://pactia.od2.vtiger.com/restapi/V1/OData/Pull/odata.svc/"
             request = api_url+table
-            response = requests.get(request, auth=('CRM-ServicioalCliente@pactia.com', 'TriFBfAepE0YRxxM'))
+            response = requests.get(request, auth=(user, key))
             print(request)
             if response.status_code==200:
                 print('Conexión exitosa a OData en tabla ', table, ' para la página ', page)
@@ -40,7 +46,7 @@ class crm_ayudantes:
             skip=(page-1)*5000
             api_url = "https://pactia.od2.vtiger.com/restapi/V1/OData/Pull/odata.svc/"
             request = api_url+table+'?$skip='+str(skip)
-            response = requests.get(request, auth=('CRM-ServicioalCliente@pactia.com', 'TriFBfAepE0YRxxM'))
+            response = requests.get(request, auth=(user, key))
             print(request)
             if response.status_code==200:
                 print('Conexión exitosa a OData en tabla ', table, ' para la página ', page)
