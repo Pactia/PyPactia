@@ -14,7 +14,7 @@ pip install git+https://github.com/Pactia/PyPactia
 ```python
 from ayudantes.crm import crm_ayudantes
 
-crm.crm_tables()
+crm_ayudantes.crm_tables()
 ```
 
 **read_crm(tabla, página):** Con esta función es posible realizar la consulta de los registros en una de las tablas del CRM en una página específica, su principal uso podría ser para realizar un primer acercamiento a la información sin consumir memoria cargando la tabla completa con la información.
