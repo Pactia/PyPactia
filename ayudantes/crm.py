@@ -79,7 +79,7 @@ class crm_ayudantes:
         
         return data
 
-    def complete_crm(table, con):
+    def complete_crm(con, table):
 
     #Se ingresa la tabla qué se quiere leer completamente, es el único parametro y debe ser en formato string
         user=con[0]
@@ -91,7 +91,7 @@ class crm_ayudantes:
         #Cada llamado entrega máximo 5001 registros sí tiene hojas adicionales
         while shape%5001 == 0 or shape%5000 == 0:
             count+=1
-            page_table = read_crm(table, count)
+            page_table = crm_ayudantes.read_crm(table=table, page=count, con=con)
             df = df.append(page_table)
             shape = len(df)
             
