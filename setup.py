@@ -8,5 +8,5 @@ setuptools.setup(
     url='https://github.com/Pactia/PyPactia',
     license='MIT',
     packages=['ayudantes'],
-    install_requires=['requests', 'xmltodict', 'pandas'],
+    install_requires=['requests', 'xmltodict', 'pandas', 'pyodbc'],
 )

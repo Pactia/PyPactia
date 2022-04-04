@@ -34,6 +34,7 @@ class crm_ayudantes:
     def read_crm(table, page, con):
     #Parametro tabla: Tabla de la cuál se va a extraer la información
     #Parametro page: Página de registros, cada página tiene 5000 registros
+    #Parametro con: Tupla con información de usuario y contraseña
         user=con[0]
         key=con[1]
     #Llamado de información por API
