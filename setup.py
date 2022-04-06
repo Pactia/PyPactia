@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='PyPactia',
-    version='0.0.2',
+    version='0.0.3',
     author='Analítica Pactia',
     description='Paquete de utilidades de Pactia',
     url='https://github.com/Pactia/PyPactia',

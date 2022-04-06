@@ -80,7 +80,7 @@ class crm_ayudantes:
         
         return data
 
-    def complete_crm(con, table):
+    def complete_crm(table, con):
 
     #Se ingresa la tabla qué se quiere leer completamente, es el único parametro y debe ser en formato string
         user=con[0]
