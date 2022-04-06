@@ -7,28 +7,30 @@ class eco_ayudantes:
     __con = None
 
     consulta="""
-    SELECT DT.Fecha ,
-    DOA.NumeroActivo ,
-    DOA.NombreActivo ,
-    DOA.NumeroObjetoAlquiler ,
-    DOA.NombreObjetoAlquiler ,
-    DOA.DescripcionClaseUso ,
-    DOA.DescripcionUsoActual ,
-    DMC.NombreMarca ,
-    DC.DescripcionCategoria ,
-    DC.CodigoContrato ,
-    DC.FechaInicioContrato ,
-    DC.FechaPrimerFinContrato ,
-    DEP.CodigoSociedad ,
-    DEP.CodigoUnidadEconomica ,
-    DOA.CodigoActivo ,
-    DTI.TipoIngreso ,
+    SELECT DT.Fecha,
+    DOA.NumeroActivo,
+    DOA.NombreActivo, 
+    DOA.NumeroObjetoAlquiler, 
+    DOA.NombreObjetoAlquiler, 
+    DOA.DescripcionClaseUso,
+    DOA.DescripcionUsoActual,
+    DMC.NombreMarca,
+    DC.DescripcionCategoria,
+    DC.CodigoContrato,
+    DC.FechaInicioContrato,
+    DC.FechaPrimerFinContrato,
+    DEP.CodigoSociedad,
+    DEP.CodigoUnidadEconomica,
+    DOA.CodigoActivo,
+    DTI.TipoIngreso,
     SUM(CASE WHEN DE.Escenario = 'REAL' THEN FI.ValorIngreso END) AS IngresoReal ,
-    SUM(CASE WHEN DE.Escenario = 'PRESUPUESTO' THEN FI.ValorIngreso END) AS IngresoPlaneado ,
+    SUM(CASE WHEN DE.Escenario = 'PRESUPUESTO' THEN FI.ValorIngreso END) AS IngresoPlaneado,
     SUM(CASE WHEN DE.Escenario = 'PROYECCION' THEN FI.ValorIngreso END) AS IngresoProyectado ,
-    SUM(CASE WHEN DE.Escenario = 'REAL' THEN FI.ValorIngresoPorcentajeParticipacionReal END) AS IngresoRealPorcentajeParticipacion ,
-    SUM(CASE WHEN DE.Escenario = 'PRESUPUESTO' THEN FI.ValorIngresoPorcentajeParticipacionReal END) AS IngresoPlaneadoPorcentajeParticipacion ,
-    SUM(CASE WHEN DE.Escenario = 'PROYECCION' THEN FI.ValorIngresoPorcentajeParticipacionReal END) AS IngresoProyectadoPortentajeParticipacion,FI.SkEstructuraProducto 
+    SUM(CASE WHEN DE.Escenario = 'REAL' THEN FI.ValorIngresoPorcentajeParticipacionReal END) AS IngresoRealPorcentajeParticipacion,
+    SUM(CASE WHEN DE.Escenario = 'PRESUPUESTO' THEN FI.ValorIngresoPorcentajeParticipacionReal END) AS IngresoPlaneadoPorcentajeParticipacion,
+    SUM(CASE WHEN DE.Escenario = 'PROYECCION' THEN FI.ValorIngresoPorcentajeParticipacionReal END) AS IngresoProyectadoPortentajeParticipacion,
+    FI.SkEstructuraProducto, 
+    FI.SKTipoIngreso 
     FROM BodegaPactia.Rentas.vFactIngresos FI 
     LEFT JOIN BodegaPactia.Rentas.vDimTiempo DT ON DT.SkTiempo = FI.SkTiempo 
     LEFT JOIN BodegaPactia.Rentas.vDimContratos DC ON DC.SkContrato = FI.SkContrato 
@@ -37,25 +39,43 @@ class eco_ayudantes:
     LEFT JOIN [BodegaPactia].[Rentas].[vDimTipoIngreso] DTI ON DTI.SkTipoIngreso = FI.SkTipoIngreso 
     LEFT JOIN [BodegaPactia].[Rentas].[vDimEscenario] DE ON DE.SkEscenario = FI.Escenario 
     LEFT JOIN [BodegaPactia].[Rentas].[vDimEstructuraProducto] DEP ON DEP.SkEstructuraProducto = FI.SkEstructuraProducto 
-    WHERE 1=1 AND DE.Escenario IN ('REAL', 'PRESUPUESTO', 'PROYECCION')
-    GROUP BY DT.Fecha, FI.SkEstructuraProducto, DOA.NumeroActivo, DOA.NombreActivo, DOA.NumeroObjetoAlquiler, DMC.NombreMarca, DC.DescripcionCategoria, DOA.NombreObjetoAlquiler, DOA.DescripcionClaseUso, DOA.DescripcionUsoActual, DC.CodigoContrato, DC.FechaInicioContrato, DC.FechaPrimerFinContrato, DEP.CodigoSociedad, DEP.CodigoUnidadEconomica, DOA.CodigoActivo, DTI.TipoIngreso
+    WHERE 1=1 AND DE.Escenario IN ('REAL', 'PRESUPUESTO', 'PROYECCION')     
+    GROUP BY DT.Fecha, FI.SkEstructuraProducto,FI.SkTipoIngreso, DOA.NumeroActivo, DOA.NombreActivo, DOA.NumeroObjetoAlquiler, DMC.NombreMarca, DC.DescripcionCategoria, DOA.NombreObjetoAlquiler, DOA.DescripcionClaseUso, DOA.DescripcionUsoActual, DC.CodigoContrato, DC.FechaInicioContrato, DC.FechaPrimerFinContrato, DEP.CodigoSociedad, DEP.CodigoUnidadEconomica, DOA.CodigoActivo, DTI.TipoIngreso
     """
 
 
-    estructura="""WITH CTE AS (SELECT * ,CAST(SkEstructuraProductoPadre AS VARCHAR(MAX))  + ',' + CAST(CAST(SkEstructuraProducto AS VARCHAR(MAX)) AS VARCHAR(MAX)) AS IdListTopDown ,CAST(Linea AS varchar(MAX)) AS NameList 
+    estructura="""WITH CTE AS (SELECT * ,CAST(SkEstructuraProductoPadre AS VARCHAR(MAX))  + ',' + 
+    CAST(CAST(SkEstructuraProducto AS VARCHAR(MAX)) AS VARCHAR(MAX)) AS IdListTopDown,
+    CAST(Linea AS varchar(MAX)) AS NameList     
     FROM [BodegaPactia].[Rentas].[vDimEstructuraProducto]     
-    WHERE SkEstructuraProductoPadre IS NULL UNION ALL SELECT t.* ,CAST(c.IdListTopDown AS VARCHAR(MAX)) + ',' + CAST(CAST(t.SkEstructuraProducto AS VARCHAR(MAX)) AS VARCHAR(MAX)) ,CAST(c.NameList + ' | ' + t.Linea AS varchar(MAX)) 
-    FROM [BodegaPactia].[Rentas].[vDimEstructuraProducto] AS t JOIN CTE c ON c.SkEstructuraProducto = t.SkEstructuraProductoPadre ) SELECT  CTE.SkEstructuraProducto, CTE.NameList FROM  CTE 
-    WHERE NOT EXISTS(SELECT * FROM [BodegaPactia].[Rentas].[vDimEstructuraProducto] WHERE SkEstructuraProductoPadre=CTE.SkEstructuraProducto) 
+    WHERE SkEstructuraProductoPadre IS NULL UNION ALL
+    SELECT t.* ,
+    CAST(c.IdListTopDown AS VARCHAR(MAX)) + ',' + CAST(CAST(t.SkEstructuraProducto AS VARCHAR(MAX)) AS VARCHAR(MAX)),
+    CAST(c.NameList + ' | ' + t.Linea AS varchar(MAX))        
+    FROM [BodegaPactia].[Rentas].[vDimEstructuraProducto] AS t 
+    JOIN CTE c ON c.SkEstructuraProducto = t.SkEstructuraProductoPadre ) 
+    SELECT  CTE.SkEstructuraProducto, CTE.NameList FROM  CTE 
+    WHERE NOT EXISTS(SELECT * FROM [BodegaPactia].[Rentas].[vDimEstructuraProducto]  
+    WHERE SkEstructuraProductoPadre=CTE.SkEstructuraProducto) 
     ORDER BY CTE.IdListTopDown
     """
     
     
-    ingreso="""WITH CTE AS (SELECT * ,CAST(SkTipoIngresoPadre AS VARCHAR(MAX))  + ',' + CAST(CAST(SkTipoIngreso AS VARCHAR(MAX)) AS VARCHAR(MAX)) AS IdListTopDown ,CAST(TipoIngreso AS varchar(MAX)) AS NameList     
+    ingreso="""
+    WITH CTE AS (SELECT * ,CAST(SkTipoIngresoPadre AS VARCHAR(MAX))  + ',' + 
+    CAST(CAST(SkTipoIngreso AS VARCHAR(MAX)) AS VARCHAR(MAX)) AS IdListTopDown         ,
+    CAST(TipoIngreso AS varchar(MAX)) AS NameList 
     FROM [BodegaPactia].[Rentas].[vDimTipoIngreso]     
-    WHERE SkTipoIngresoPadre IS NULL UNION ALL SELECT t.* ,CAST(c.IdListTopDown AS VARCHAR(MAX)) + ',' + CAST(CAST(t.TipoIngreso AS VARCHAR(MAX)) AS VARCHAR(MAX)) ,CAST(c.NameList + ' | ' + t.TipoIngreso AS varchar(MAX))       
-    FROM [BodegaPactia].[Rentas].[vDimTipoIngreso] AS t JOIN CTE c ON c.SkTipoIngreso = t.SkTipoIngresoPadre ) SELECT  CTE.SKTipoIngreso, CTE.NameList FROM  CTE 
-    WHERE NOT EXISTS(SELECT * FROM [BodegaPactia].[Rentas].[vDimEstructuraProducto] WHERE SkTipoIngresoPadre=CTE.SkTipoIngreso) 
+    WHERE SkTipoIngresoPadre IS NULL UNION ALL 
+    SELECT t.* ,
+    CAST(c.IdListTopDown AS VARCHAR(MAX)) + ',' + 
+    CAST(CAST(t.TipoIngreso AS VARCHAR(MAX)) AS VARCHAR(MAX)),
+    CAST(c.NameList + ' | ' + t.TipoIngreso AS varchar(MAX)) 
+    FROM [BodegaPactia].[Rentas].[vDimTipoIngreso] AS t        
+    JOIN CTE c ON c.SkTipoIngreso = t.SkTipoIngresoPadre ) 
+    SELECT  CTE.SKTipoIngreso, CTE.NameList FROM  CTE 
+    WHERE NOT EXISTS(SELECT * FROM [BodegaPactia].[Rentas].[vDimEstructuraProducto] 
+    WHERE SkTipoIngresoPadre=CTE.SkTipoIngreso) 
     ORDER BY CTE.IdListTopDown
     """
 
@@ -84,7 +104,9 @@ class eco_ayudantes:
 
     def table_join():
         consulta = pd.read_sql_query(eco_ayudantes.consulta, con = eco_ayudantes.__con)
-        estructura = eco_ayudantes.clean_ingreso()
+        # print(consulta.head() )
+        estructura = eco_ayudantes.clean_estructura()
+        # print(estructura.head() )
         ingreso = eco_ayudantes.clean_ingreso()
         consulta = consulta.merge(estructura, on='SkEstructuraProducto', how='left')
         consulta = consulta.merge(ingreso, on='SKTipoIngreso', how='left')
