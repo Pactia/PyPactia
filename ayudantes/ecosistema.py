@@ -6,6 +6,9 @@ class eco_ayudantes:
 
     __con = None
 
+    concat_ano= "AND DT.ANO IN ("
+    concat_mes =  "AND DT.MES IN ("
+
     consulta="""
     SELECT DT.Fecha,
     DOA.NumeroActivo,
@@ -39,7 +42,9 @@ class eco_ayudantes:
     LEFT JOIN [BodegaPactia].[Rentas].[vDimTipoIngreso] DTI ON DTI.SkTipoIngreso = FI.SkTipoIngreso 
     LEFT JOIN [BodegaPactia].[Rentas].[vDimEscenario] DE ON DE.SkEscenario = FI.Escenario 
     LEFT JOIN [BodegaPactia].[Rentas].[vDimEstructuraProducto] DEP ON DEP.SkEstructuraProducto = FI.SkEstructuraProducto 
-    WHERE 1=1 AND DE.Escenario IN ('REAL', 'PRESUPUESTO', 'PROYECCION')     
+    WHERE 1=1 AND DE.Escenario IN ('REAL', 'PRESUPUESTO', 'PROYECCION')"""
+
+    consulta_2= """     
     GROUP BY DT.Fecha, FI.SkEstructuraProducto,FI.SkTipoIngreso, DOA.NumeroActivo, DOA.NombreActivo, DOA.NumeroObjetoAlquiler, DMC.NombreMarca, DC.DescripcionCategoria, DOA.NombreObjetoAlquiler, DOA.DescripcionClaseUso, DOA.DescripcionUsoActual, DC.CodigoContrato, DC.FechaInicioContrato, DC.FechaPrimerFinContrato, DEP.CodigoSociedad, DEP.CodigoUnidadEconomica, DOA.CodigoActivo, DTI.TipoIngreso
     """
 
@@ -102,8 +107,8 @@ class eco_ayudantes:
         return df
 
 
-    def table_join():
-        consulta = pd.read_sql_query(eco_ayudantes.consulta, con = eco_ayudantes.__con)
+    def table_join(query):
+        consulta = pd.read_sql_query(query, con = eco_ayudantes.__con)
         # print(consulta.head() )
         estructura = eco_ayudantes.clean_estructura()
         # print(estructura.head() )
@@ -114,20 +119,37 @@ class eco_ayudantes:
     
     def complete_eco():
         #Genera una tabla con toda la información disponible de rentas
-        df = eco_ayudantes.table_join()
+        query=eco_ayudantes.consulta+eco_ayudantes.consulta_2
+        # print(query)
+        df = eco_ayudantes.table_join(query)
         return df
 
-    def filtered_eco(year, month):
+    def filtered_eco(year=None, month=None):
         #Genera una tabla filtrada de acuerdo con el año y el mes, con toda la información disponible de rentas
-        year = str(year)
-        month = str(month)
+        #Para filtrar varios meses o años es necesario ingresar dentro de la misma string la selección e.g. '2019,2020'
+        
+        if year !=None:
+            year = str(year)
+        if month !=None:
+            month = str(month)
 
-        if bool(month)==True & bool(year)==True:
-            pass
-        elif bool(month)==True & bool(year)==False:
-            pass
-        elif bool(month)==False & bool(year)==True:
-            pass
+        if bool(month)==True and bool(year)==True:
+            #Entrando los dos parametros
+            query=eco_ayudantes.consulta+eco_ayudantes.concat_ano+year+')'+eco_ayudantes.concat_mes+month+')'+eco_ayudantes.consulta_2
+            
+            # print(query)
+            df = eco_ayudantes.table_join(query)
+            print('Ingreso de ambos')
+        elif bool(month)==True and bool(year)==False:
+            #Entrando únicamente el mes
+            query=eco_ayudantes.consulta+eco_ayudantes.concat_mes+month+')'+eco_ayudantes.consulta_2
+            df = eco_ayudantes.table_join(query)
+            print('Ingreso de mes')
+        elif bool(month)==False and bool(year)==True:
+            #Entrando únicamente el año
+            query=eco_ayudantes.consulta+eco_ayudantes.concat_ano+year+')'+eco_ayudantes.consulta_2
+            df = eco_ayudantes.table_join(query)
+            print('Ingreso de año')
         else:
             print('Debe especificar el valor de año o de mes, si no desea aplicar filtros utilice la función complete_eco')
-        return 
+        return df
