@@ -84,11 +84,19 @@ class eco_ayudantes:
     ORDER BY CTE.IdListTopDown
     """
 
-    def conection_eco():
+    def conection_eco(*args):
+
         server = 'srvprodsqlcubo.eastus.cloudapp.azure.com'
         database = 'BodegaPactia'
-        user = input('Usuario:')
-        key = getpass.getpass('Contraseña:')
+
+        try:
+            user = args[0]
+            key = args[1]
+        except:
+            user = input('Usuario:')
+            key = getpass.getpass('Contraseña:')
+
+        
         eco_ayudantes.__con = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+user+';PWD='+ key+';TrustServerCertificate=YES;') 
         return True
     
@@ -137,19 +145,15 @@ class eco_ayudantes:
             #Entrando los dos parametros
             query=eco_ayudantes.consulta+eco_ayudantes.concat_ano+year+')'+eco_ayudantes.concat_mes+month+')'+eco_ayudantes.consulta_2
             
-            # print(query)
             df = eco_ayudantes.table_join(query)
-            print('Ingreso de ambos')
         elif bool(month)==True and bool(year)==False:
             #Entrando únicamente el mes
             query=eco_ayudantes.consulta+eco_ayudantes.concat_mes+month+')'+eco_ayudantes.consulta_2
             df = eco_ayudantes.table_join(query)
-            print('Ingreso de mes')
         elif bool(month)==False and bool(year)==True:
             #Entrando únicamente el año
             query=eco_ayudantes.consulta+eco_ayudantes.concat_ano+year+')'+eco_ayudantes.consulta_2
             df = eco_ayudantes.table_join(query)
-            print('Ingreso de año')
         else:
             print('Debe especificar el valor de año o de mes, si no desea aplicar filtros utilice la función complete_eco')
         return df

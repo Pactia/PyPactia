@@ -6,10 +6,14 @@ import getpass
 
 class crm_ayudantes:
 
-    def inicio_crm():
+    def inicio_crm(*args):
+        try:
+            user = args[0]
+            key = args[1]
+        except:
+            user = input('Usuario:')
+            key = getpass.getpass('Contraseña:')
 
-        user = input('Usuario:')
-        key = getpass.getpass('Contraseña:')
         return user, key
       
 
