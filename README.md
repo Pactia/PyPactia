@@ -2,6 +2,10 @@
 Paquete para el cosumo de información de CRM y Ecosistema de Datos de Pactia
 
 # Instalación
+Antes de poder instalar **PyPactia** también es necesario contar con *GIT* qué es un software para el manejo de versiones en el desarrollo de software y similares. En el siguiente link se puede descargar:
+
+[Descarga GIT](https://github.com/git-for-windows/git/releases/download/v2.36.1.windows.1/Git-2.36.1-64-bit.exe)
+
 Para la instalación se debe correr el siguiente comando en python:
 ```python
 pip install git+https://github.com/Pactia/PyPactia
