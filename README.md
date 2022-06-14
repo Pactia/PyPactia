@@ -2,6 +2,10 @@
 Paquete para el cosumo de información de CRM y Ecosistema de Datos de Pactia
 
 # Instalación
+Antes de poder instalar **PyPactia** también es necesario contar con *GIT* qué es un software para el manejo de versiones en el desarrollo de software y similares. En el siguiente link se puede descargar:
+
+[Descarga GIT](https://github.com/git-for-windows/git/releases/download/v2.36.1.windows.1/Git-2.36.1-64-bit.exe)
+
 Para la instalación se debe correr el siguiente comando en python:
 ```python
 pip install git+https://github.com/Pactia/PyPactia
@@ -88,7 +92,7 @@ eco.conection_eco(usuario,contraseña)
 
 ## Acceder a información
 
-**complete_eco()** Esta función genera la tabla completa con la información de rentas contenida en el ecosistema, no requiere ningún argumento, solo con llamarla se genera la tabla de información.
+**complete_eco( )** Esta función genera la tabla completa con la información de rentas contenida en el ecosistema, no requiere ningún argumento, solo con llamarla se genera la tabla de información.
 
 ```python
 from ayudantes.ecosistema import eco_ayudantes as eco
@@ -129,4 +133,12 @@ from ayudantes.ecosistema import eco_ayudantes as eco
 
 #Arrojará la información de enero en todos los años disponibles
 eco.filtered_eco(month='1')
+```
+
+**consulta_areas( )** Esta función está diseñada para obtener el área de los objetos de alquiler de Pactia. Contiene únicamente dos columnas, el número del objeto y el área, con la columna de número de objeto podrá unirse a la tabla de rentas. 
+
+```python
+from ayudantes.ecosistema import eco_ayudantes as eco
+
+eco.consulta_areas()
 ```
