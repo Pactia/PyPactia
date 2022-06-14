@@ -84,6 +84,30 @@ class eco_ayudantes:
     ORDER BY CTE.IdListTopDown
     """
 
+    areas1 == """ 
+    SELECT DOA.NumeroObjetoAlquiler, FO.Area, DT.Fecha
+
+    FROM [BodegaPactia].[Rentas].[vFactOcupacion] FO
+
+    INNER JOIN [BodegaPactia].[Rentas].[vDimTiempo] DT ON DT.SKTiempo = FO.SkTiempo AND DT.Fecha = EOMONTH(GETDATE())
+
+    INNER JOIN [BodegaPactia].[Rentas].[vDimObjetoAlquiler] DOA ON DOA.SkObjetoAlquiler = FO.SkObjetoAlquiler
+
+    WHERE FO.SkEscenario = 3 AND FO.SkTipoOcupacion = 1
+    """
+
+    areas2 == """ 
+    SELECT DOA.NumeroObjetoAlquiler, FO.Area, DT.Fecha
+
+    FROM [BodegaPactia].[Rentas].[vFactOcupacion] FO
+
+    INNER JOIN [BodegaPactia].[Rentas].[vDimTiempo] DT ON DT.SKTiempo = FO.SkTiempo
+
+    INNER JOIN [BodegaPactia].[Rentas].[vDimObjetoAlquiler] DOA ON DOA.SkObjetoAlquiler = FO.SkObjetoAlquiler
+
+    WHERE FO.SkEscenario = 3 AND FO.SkTipoOcupacion = 1
+    """
+
     def conection_eco(*args):
 
         server = 'srvprodsqlcubo.eastus.cloudapp.azure.com'
@@ -156,4 +180,12 @@ class eco_ayudantes:
             df = eco_ayudantes.table_join(query)
         else:
             print('Debe especificar el valor de año o de mes, si no desea aplicar filtros utilice la función complete_eco')
+        return df
+
+    def consulta_areas(last = True):
+        #Genera una tabla con el listado de áreas actuales de cada uno de los objetos de alquiler disponibles
+        if last == True:
+            df = pd.read_sql_query(eco_ayudantes.areas1, con = eco_ayudantes.__con)
+        else:
+            df = pd.read_sql_query(eco_ayudantes.areas2, con = eco_ayudantes.__con)    
         return df
