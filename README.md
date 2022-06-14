@@ -134,6 +134,7 @@ from ayudantes.ecosistema import eco_ayudantes as eco
 #Arrojará la información de enero en todos los años disponibles
 eco.filtered_eco(month='1')
 ```
+#### Área de objetos de alquiler
 
 **consulta_areas( )** Esta función está diseñada para obtener el área de los objetos de alquiler de Pactia. Contiene únicamente dos columnas, el número del objeto y el área, con la columna de número de objeto podrá unirse a la tabla de rentas. 
   - **last** = Este parametro puede tener dos valores *True* o *False*, cuándo se encuentra en *True* hace el llamado de la última información registrada, si está en *False* obtiene toda la información histórica de áreas.
