@@ -84,7 +84,7 @@ class eco_ayudantes:
     ORDER BY CTE.IdListTopDown
     """
 
-    areas1 == """ 
+    areas1 = """ 
     SELECT DOA.NumeroObjetoAlquiler, FO.Area, DT.Fecha
 
     FROM [BodegaPactia].[Rentas].[vFactOcupacion] FO
@@ -96,7 +96,7 @@ class eco_ayudantes:
     WHERE FO.SkEscenario = 3 AND FO.SkTipoOcupacion = 1
     """
 
-    areas2 == """ 
+    areas2 = """ 
     SELECT DOA.NumeroObjetoAlquiler, FO.Area, DT.Fecha
 
     FROM [BodegaPactia].[Rentas].[vFactOcupacion] FO
