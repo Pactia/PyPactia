@@ -6,6 +6,13 @@ Antes de poder instalar **PyPactia** también es necesario contar con *GIT* qué
 
 [Descarga GIT](https://github.com/git-for-windows/git/releases/download/v2.36.1.windows.1/Git-2.36.1-64-bit.exe)
 
+También se puede instalar en la consola de anaconda con el siguiente comando:
+
+```cmd
+conda install -c anaconda git
+```
+
+
 Para la instalación se debe correr el siguiente comando en python:
 ```python
 pip install git+https://github.com/Pactia/PyPactia
