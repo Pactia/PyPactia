@@ -33,7 +33,7 @@ class crm_ayudantes:
         json_data = json.loads(json.dumps(dict_data))
         final_json = pd.DataFrame.from_dict(json_data).service['workspace']
         # print('Las tablas disponibles en el CRM son:\n\n')
-        lista = print(pd.json_normalize(pd.json_normalize(final_json).collection[0])['atom:title'])
+        lista = pd.json_normalize(pd.json_normalize(final_json).collection[0])['atom:title']
         return  lista
     
     def read_crm(table, page, con):
