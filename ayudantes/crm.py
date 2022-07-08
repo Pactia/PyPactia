@@ -78,8 +78,8 @@ class crm_ayudantes:
         data = data[data.columns.drop(list(data.filter(regex='@null')))]
         data = data[data.columns.drop(list(data.filter(regex='@m:null')))]
         
-        data.columns = data.columns.str.replace('content.m:properties.d:', '')
-        data.columns = data.columns.str.replace('.#text','')
+        data.columns = data.columns.str.replace('content.m:properties.d:', '', regex=True)
+        data.columns = data.columns.str.replace('.#text','', regex=True)
         
         data = data.iloc[:,7:]
         
@@ -98,7 +98,8 @@ class crm_ayudantes:
         while shape%5001 == 0 or shape%5000 == 0:
             count+=1
             page_table = crm_ayudantes.read_crm(table=table, page=count, con=con)
-            df = df.append(page_table)
+            df = pd.concat([df, page_table], axis=0)
+            df.reset_index(drop=True, inplace=True)
             shape = len(df)
             
         print('Total de registros de tabla ', table,' fue ',shape)
